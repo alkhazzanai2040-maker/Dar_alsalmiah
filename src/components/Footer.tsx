@@ -1,18 +1,35 @@
 import { useState } from 'react';
-import { Phone, Mail, MapPin, Building, ShieldCheck, Clock, MessageCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, Building, ShieldCheck, Clock, MessageCircle, ExternalLink } from 'lucide-react';
 import { dict } from '../data';
 import { Language } from '../types';
 import { Logo } from './Logo';
 
 interface FooterProps {
   lang: Language;
+  currentPage: 'home' | 'about' | 'services' | 'fleet' | 'projects' | 'careers' | 'contact';
+  setCurrentPage: (page: 'home' | 'about' | 'services' | 'fleet' | 'projects' | 'careers' | 'contact') => void;
   scrollToSection: (id: string) => void;
 }
 
-export default function Footer({ lang, scrollToSection }: FooterProps) {
+export default function Footer({ lang, currentPage, setCurrentPage, scrollToSection }: FooterProps) {
   const t = dict[lang];
   const isRtl = lang === 'ar';
   const [copied, setCopied] = useState(false);
+
+  const navItems = [
+    { id: 'home', label: lang === 'ar' ? 'الرئيسية' : 'Home', type: 'page' },
+    { id: 'about', label: t.about, type: 'page' },
+    { id: 'services', label: t.services, type: 'page' },
+    { id: 'fleet', label: t.fleet, type: 'page' },
+    { id: 'projects', label: t.projects, type: 'page' },
+    { id: 'careers', label: lang === 'ar' ? 'طلب التوظيف' : 'Careers', type: 'page' },
+    { id: 'contact', label: t.contact, type: 'page' },
+  ];
+
+  const handleNavClick = (item: { id: string; type: string }) => {
+    setCurrentPage(item.id as any);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <footer className="bg-slate-950 text-slate-400 pt-16 pb-8 border-t border-slate-900 overflow-hidden" id="corporate-footer">
@@ -23,7 +40,7 @@ export default function Footer({ lang, scrollToSection }: FooterProps) {
           <div className="flex flex-col gap-4">
             <div className={`flex items-center gap-3 ${isRtl ? 'text-right' : 'text-left'}`}>
               <div className="flex items-center justify-center p-1">
-                <Logo className="h-14 sm:h-16 w-auto" isDarkBackground={true} />
+                <Logo className="h-16 sm:h-20 aspect-[1000/700] w-auto object-contain" isDarkBackground={true} />
               </div>
               <div>
                 <h3 className="font-sans font-bold text-white tracking-tight text-lg leading-none">
@@ -51,18 +68,11 @@ export default function Footer({ lang, scrollToSection }: FooterProps) {
               {lang === 'ar' ? 'روابط سريعة' : 'Quick Navigation'}
             </h4>
             <ul className={`space-y-3 text-sm ${isRtl ? 'text-right' : 'text-left'}`}>
-              {[
-                { id: 'about', label: t.about },
-                { id: 'services', label: t.services },
-                { id: 'projects', label: t.projects },
-                { id: 'fleet', label: t.fleet },
-                { id: 'structure', label: t.orgStructure },
-                { id: 'contact', label: t.contact },
-              ].map((item) => (
+              {navItems.map((item) => (
                 <li key={item.id}>
                   <button
-                    onClick={() => scrollToSection(item.id)}
-                    className="hover:text-white transition-colors"
+                    onClick={() => handleNavClick(item)}
+                    className="hover:text-white transition-colors cursor-pointer"
                   >
                     <span>{isRtl ? '• ' : '• '}{item.label}</span>
                   </button>
@@ -196,7 +206,14 @@ export default function Footer({ lang, scrollToSection }: FooterProps) {
               </li>
               <li className={`flex gap-2.5 ${isRtl ? 'text-right' : 'text-left'}`}>
                 <Mail className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
-                <span className="break-all">dar_elsalmyah@hotmail.com</span>
+                <a href="mailto:info@dasco-sa.com" className="break-all hover:text-white transition-colors">info@dasco-sa.com</a>
+              </li>
+              {/* Official Corporate Website Link */}
+              <li className={`flex gap-2.5 ${isRtl ? 'text-right' : 'text-left'}`}>
+                <ExternalLink className="w-5 h-5 text-green-550 shrink-0 mt-0.5" />
+                <a href="https://dasco-sa.com/" target="_blank" rel="noopener noreferrer" className="break-all text-green-400 hover:text-white transition-colors font-extrabold flex items-center gap-1">
+                  <span>dasco-sa.com</span>
+                </a>
               </li>
             </ul>
           </div>

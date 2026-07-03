@@ -12,12 +12,19 @@ import Footer from './components/Footer';
 import StatSummary from './components/StatSummary';
 import OrgChartStructure from './components/OrgChartStructure';
 import QuoteForm from './components/QuoteForm';
+import ProjectsPage from './components/ProjectsPage';
+import CareersPage from './components/CareersPage';
+import AboutPage from './components/AboutPage';
+import ServicesPage from './components/ServicesPage';
+import FleetPage from './components/FleetPage';
+import ContactPage from './components/ContactPage';
 
 import { projects, equipmentList, dict } from './data';
 import { Language, Project } from './types';
 
 export default function App() {
   const [lang, setLang] = useState<Language>('ar');
+  const [currentPage, setCurrentPage] = useState<'home' | 'about' | 'services' | 'fleet' | 'projects' | 'careers' | 'contact'>('home');
   const [activeSection, setActiveSection] = useState('home');
   const [activeProjectCategory, setActiveProjectCategory] = useState<string>('all');
   const [activeFleetCategory, setActiveFleetCategory] = useState<string>('all');
@@ -29,6 +36,36 @@ export default function App() {
 
   const t = dict[lang];
   const isRtl = lang === 'ar';
+
+  // URL Hash routing synchronization
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      const validPages = ['home', 'about', 'services', 'fleet', 'projects', 'careers', 'contact'];
+      if (validPages.includes(hash)) {
+        setCurrentPage(hash as any);
+      } else if (!hash) {
+        setCurrentPage('home');
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Custom handler to sync browser address bar hash cleanly
+  const handlePageChange = (page: 'home' | 'about' | 'services' | 'fleet' | 'projects' | 'careers' | 'contact') => {
+    if (page === 'home') {
+      // Clean URL hash without triggering scroll or page reload
+      window.history.pushState(null, '', window.location.pathname);
+      setCurrentPage('home');
+    } else {
+      window.location.hash = page;
+      setCurrentPage(page);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Smooth Scroll handler
   const scrollToSection = (id: string) => {
@@ -154,67 +191,89 @@ export default function App() {
       <Header 
         lang={lang} 
         setLang={setLang} 
+        currentPage={currentPage}
+        setCurrentPage={handlePageChange}
         activeSection={activeSection} 
         scrollToSection={scrollToSection} 
       />
 
-      {/* Hero Landing Section */}
-      <section id="home" className="relative pt-32 pb-20 md:pt-44 md:pb-28 bg-slate-950 text-white overflow-hidden">
-        {/* Dynamic Abstract Grid Overlay */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-900/45 via-slate-950/95 to-slate-950 z-0" />
-        
-        {/* Dynamic brand lines with Bento geometry */}
-        <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none transform skew-x-12 z-0 overflow-hidden">
-          <div className="absolute inset-y-0 left-0 w-12 bg-green-700 scale-y-125 translate-x-12 rotate-12" />
-          <div className="absolute inset-y-0 left-24 w-16 bg-red-650 scale-y-125 translate-x-24 rotate-12" />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-          <div className="max-w-4xl flex flex-col items-start gap-4">
+      {currentPage === 'about' ? (
+        <AboutPage lang={lang} />
+      ) : currentPage === 'services' ? (
+        <ServicesPage lang={lang} />
+      ) : currentPage === 'fleet' ? (
+        <FleetPage lang={lang} />
+      ) : currentPage === 'projects' ? (
+        <ProjectsPage lang={lang} projects={projects} />
+      ) : currentPage === 'careers' ? (
+        <CareersPage lang={lang} />
+      ) : currentPage === 'contact' ? (
+        <ContactPage lang={lang} />
+      ) : (
+        <>
+          {/* Hero Landing Section */}
+          <section id="home" className="relative pt-32 pb-20 md:pt-44 md:pb-28 bg-slate-950 text-white overflow-hidden">
+            {/* Dynamic Abstract Grid Overlay */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-900/45 via-slate-950/95 to-slate-950 z-0" />
             
-            {/* Top Badge of commercial validation */}
-            <div className={`flex items-center gap-2 px-3.5 py-2 bg-green-950/85 border border-green-900/50 rounded-full text-green-300 text-xs font-bold backdrop-blur-md ${isRtl ? 'flex-row-reverse' : ''}`}>
-              <ShieldCheck className="w-4 h-4 text-red-550 shrink-0" />
-              <span>{t.certified}</span>
+            {/* Dynamic brand lines with Bento geometry */}
+            <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none transform skew-x-12 z-0 overflow-hidden">
+              <div className="absolute inset-y-0 left-0 w-12 bg-green-700 scale-y-125 translate-x-12 rotate-12" />
+              <div className="absolute inset-y-0 left-24 w-16 bg-red-650 scale-y-125 translate-x-24 rotate-12" />
             </div>
 
-            {/* Main Catchy Heading */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight mt-3">
-              {t.title}
-            </h1>
-            
-            {/* Catchy dynamic Subtitle */}
-            <p className="text-lg sm:text-xl text-slate-100 max-w-2xl leading-relaxed mt-1 font-medium">
-              {t.subtitle}
-            </p>
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+              <div className="max-w-4xl flex flex-col items-start gap-4">
+                
+                {/* Top Badge of commercial validation */}
+                <div className={`flex items-center gap-2 px-3.5 py-2 bg-green-950/85 border border-green-900/50 rounded-full text-green-300 text-xs font-bold backdrop-blur-md ${isRtl ? 'flex-row-reverse' : ''}`}>
+                  <ShieldCheck className="w-4 h-4 text-red-550 shrink-0" />
+                  <span>{t.certified}</span>
+                </div>
 
-            <p className="text-sm text-slate-400 max-w-2xl leading-relaxed font-normal">
-              {isRtl 
-                ? 'إحدى الشركات الوطنية الرائدة والمسجلة بشكل رسمي والمصنفة درجة أولى لتنفيذ مشاريع صيانة الطرق والكباري والسكك الحديدية وقنوات تصريف السيول بأسطول عملاق تملكه الشركة بالكامل.'
-                : 'One of the premium first-class classified Saudi entities officially qualified to complete major road paving, highway works, railways, excavations, and stormwater culvert systems with a massive corporate fleet.'}
-            </p>
+                {/* Main Catchy Heading */}
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight mt-3">
+                  {t.title}
+                </h1>
+                
+                {/* Catchy dynamic Subtitle */}
+                <p className="text-lg sm:text-xl text-slate-100 max-w-2xl leading-relaxed mt-1 font-medium">
+                  {t.subtitle}
+                </p>
 
-            {/* Direct Action triggers */}
-            <div className={`flex flex-wrap gap-4 mt-6 ${isRtl ? 'flex-row-reverse' : ''}`}>
-              <button
-                onClick={() => scrollToSection('contact')}
-                className="px-8 py-4 bg-red-600 text-white hover:bg-red-750 hover:scale-[1.02] active:scale-[0.98] transition-all font-extrabold rounded-2xl text-sm shadow-lg shadow-red-950/20"
-              >
-                {lang === 'ar' ? 'طلب تسعير هاتفياً' : 'Request Estimations'}
-              </button>
-              <button
-                onClick={() => scrollToSection('projects')}
-                className="px-8 py-4 bg-green-950/80 border border-green-900/70 hover:bg-green-900/80 hover:scale-[1.02] active:scale-[0.98] transition-all font-bold rounded-2xl text-sm text-slate-200"
-              >
-                {lang === 'ar' ? 'تصفح المشاريع 27' : 'Browse Projects (27)'}
-              </button>
+                <p className="text-sm text-slate-400 max-w-2xl leading-relaxed font-normal">
+                  {isRtl 
+                    ? 'إحدى الشركات الوطنية الرائدة والمسجلة بشكل رسمي والمصنفة درجة أولى لتنفيذ مشاريع صيانة الطرق والكباري والسكك الحديدية وقنوات تصريف السيول بأسطول عملاق تملكه الشركة بالكامل.'
+                    : 'One of the premium first-class classified Saudi entities officially qualified to complete major road paving, highway works, railways, excavations, and stormwater culvert systems with a massive corporate fleet.'}
+                </p>
+
+                {/* Direct Action triggers */}
+                <div className={`flex flex-wrap gap-4 mt-6 ${isRtl ? 'flex-row-reverse' : ''}`}>
+                  <button
+                    onClick={() => {
+                      setCurrentPage('contact');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-8 py-4 bg-red-600 text-white hover:bg-red-750 hover:scale-[1.02] active:scale-[0.98] transition-all font-extrabold rounded-2xl text-sm shadow-lg shadow-red-950/20 cursor-pointer"
+                  >
+                    {lang === 'ar' ? 'طلب تسعير ومناقصة' : 'Request Quotation'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCurrentPage('projects');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-8 py-4 bg-green-950/80 border border-green-900/70 hover:bg-green-900/80 hover:scale-[1.02] active:scale-[0.98] transition-all font-bold rounded-2xl text-sm text-slate-200 cursor-pointer"
+                  >
+                    {lang === 'ar' ? 'تصفح المشاريع 27' : 'Browse Projects (27)'}
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Dynamic bottom curve separator */}
-        <div className="absolute bottom-0 left-0 right-0 h-8 bg-slate-100" />
-      </section>
+            {/* Dynamic bottom curve separator */}
+            <div className="absolute bottom-0 left-0 right-0 h-8 bg-slate-100" />
+          </section>
 
       {/* Count Summary cards overlay */}
       <StatSummary lang={lang} />
@@ -357,6 +416,18 @@ export default function App() {
                 </div>
               </div>
 
+              <div className={`mt-4 flex ${isRtl ? 'justify-start' : 'justify-end'}`}>
+                <button
+                  onClick={() => {
+                    setCurrentPage('about');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="px-6 py-3.5 bg-green-900 hover:bg-green-800 text-white font-black rounded-xl text-xs flex items-center gap-2 shadow-sm transition-all cursor-pointer"
+                >
+                  <span>{isRtl ? 'عرض السيرة الذاتية والهيكل التنظيمي الكامل والشهادات ←' : 'Read Full Corporate Bio & Org Chart ←'}</span>
+                </button>
+              </div>
+
             </div>
 
           </div>
@@ -476,7 +547,7 @@ export default function App() {
               {t.services}
             </span>
             <h2 className="text-4xl font-black tracking-tight mb-4 text-white">
-              {lang === 'ar' ? 'باقة خدماتنا المتخصصة' : 'Fully Accredited Engineering Specialties'}
+              {lang === 'ar' ? 'باقة خدماتنا المعتمدة هندسياً' : 'Our Fully Qualified Engineering Services'}
             </h2>
             <p className="text-green-200 text-sm">
               {t.servicesSubtitle}
@@ -488,10 +559,7 @@ export default function App() {
             {[
               { id: 1, title: t.service1, desc: t.service1Desc, icon: Shovel, color: 'text-red-400 bg-slate-900/80 border-slate-800', badgeColor: 'bg-red-950/50 text-red-400 border-red-900/50' },
               { id: 2, title: t.service2, desc: t.service2Desc, icon: Building, color: 'text-green-400 bg-slate-900/80 border-slate-800', badgeColor: 'bg-green-950/50 text-green-400 border-green-900/50' },
-              { id: 3, title: t.service3, desc: t.service3Desc, icon: Truck, color: 'text-red-400 bg-slate-900/80 border-slate-800', badgeColor: 'bg-red-950/50 text-red-400 border-red-900/50' },
-              { id: 4, title: t.service4, desc: t.service4Desc, icon: Layers, color: 'text-green-400 bg-slate-900/80 border-slate-800', badgeColor: 'bg-green-950/50 text-green-400 border-green-900/50' },
-              { id: 5, title: t.service5, desc: t.service5Desc, icon: Waves, color: 'text-red-400 bg-slate-900/80 border-slate-800', badgeColor: 'bg-red-950/50 text-red-400 border-red-900/50' },
-              { id: 6, title: t.service6, desc: t.service6Desc, icon: Settings, color: 'text-green-400 bg-slate-900/80 border-slate-800', badgeColor: 'bg-green-950/50 text-green-400 border-green-900/50' }
+              { id: 3, title: t.service3, desc: t.service3Desc, icon: Truck, color: 'text-red-400 bg-slate-900/80 border-slate-800', badgeColor: 'bg-red-950/50 text-red-400 border-red-900/50' }
             ].map((srv) => {
               const Icon = srv.icon;
               return (
@@ -512,154 +580,16 @@ export default function App() {
             })}
           </div>
 
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section id="projects" className="py-20 scroll-mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Heading */}
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-xs font-black tracking-widest text-green-900 uppercase bg-green-150 px-3.5 py-1.5 rounded-full inline-block mb-3">
-              {t.projects}
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-4">
-              {isRtl ? 'المحفظة الكاملة للمشاريع والمنجزات إحصائياً' : 'Official Project Database'}
-            </h2>
-            <p className="text-slate-600 text-sm font-medium">
-              {t.projectsSubtitle}
-            </p>
-
-            {/* Total value metric shown proudly */}
-            <div className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-red-650 text-white border border-red-550 rounded-2xl text-xs font-black shadow-sm">
-              <span>{isRtl ? 'إجمالي قيمة التعاقدات للملف المذكور:' : 'Aggregated Contract Portfolio Value:'}</span>
-              <span className="font-extrabold text-white">{totalContractsValue.toLocaleString()} SAR</span>
-            </div>
+          <div className="text-center mt-12">
+            <button
+              onClick={() => {
+                handlePageChange('services');
+              }}
+              className="px-8 py-4 bg-red-650 hover:bg-red-750 text-white hover:scale-[1.02] active:scale-[0.98] transition-all font-extrabold rounded-2xl text-xs shadow-lg shadow-red-950/20 cursor-pointer inline-flex items-center gap-2"
+            >
+              <span>{isRtl ? 'عرض تفاصيل الخدمات والاعتمادات والرموز الإنشائية ←' : 'View Full Services & Specifications Catalog ←'}</span>
+            </button>
           </div>
-
-          {/* Search bar & Categories filter */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8 bg-slate-50 p-4 rounded-3xl border border-slate-200">
-            {/* Project Category tabs */}
-            <div className={`flex flex-wrap gap-1 w-full md:w-auto ${isRtl ? 'flex-row-reverse justify-end' : 'justify-start'}`}>
-              {[
-                { id: 'all', label: t.projectCategoryAll },
-                { id: 'roads', label: t.projectCategoryRoads },
-                { id: 'infrastructure', label: t.projectCategoryInfra },
-                { id: 'excavation', label: t.projectCategoryExcavation },
-                { id: 'utility', label: t.projectCategoryUtility },
-              ].map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveProjectCategory(cat.id)}
-                  className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${
-                    activeProjectCategory === cat.id
-                      ? 'bg-green-900 text-white shadow-sm'
-                      : 'bg-white hover:bg-slate-150 text-slate-700 border border-slate-200'
-                  }`}
-                  id={`project-tab-${cat.id}`}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Search Input */}
-            <div className={`relative w-full md:w-80 flex items-center ${isRtl ? 'flex-row-reverse' : ''}`}>
-              <Search className="w-4 h-4 text-slate-400 absolute mx-3 pointer-events-none" />
-              <input
-                type="text"
-                value={projectQuery}
-                onChange={(e) => setProjectQuery(e.target.value)}
-                placeholder={t.searchProject}
-                className={`w-full py-2.5 border border-slate-200 rounded-2xl bg-white text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-green-900/20 ${isRtl ? 'pl-3 pr-9 text-right' : 'pl-9 pr-3 text-left'}`}
-                id="project-search-input"
-              />
-            </div>
-          </div>
-
-          {/* Projects Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-grid">
-            {filteredProjects.map((proj) => {
-              const name = isRtl ? proj.nameAr : proj.nameEn;
-              const client = isRtl ? proj.clientAr : proj.clientEn;
-              const location = isRtl ? proj.locationAr : proj.locationEn;
-              const duration = isRtl ? proj.durationAr : proj.durationEn;
-              const scope = isRtl ? proj.scopeAr : proj.scopeEn;
-
-              return (
-                <div 
-                  key={proj.id} 
-                  className="bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between hover:border-slate-350 transition-all duration-300"
-                  id={`project-card-${proj.id}`}
-                >
-                  <div className="p-6 space-y-4">
-                    {/* Top indicator of budget, Location & Category */}
-                    <div className={`flex justify-between items-center ${isRtl ? 'flex-row-reverse' : ''}`}>
-                      <span className="px-2.5 py-1 bg-green-50 border border-green-200 text-green-800 rounded-lg text-[10px] font-black tracking-wider uppercase">
-                        {proj.category === 'roads' ? (isRtl ? 'شق وتعبيد طرق' : 'Road Construction') : (isRtl ? 'بنية تحتية عامة' : 'Infrastructure')}
-                      </span>
-                      <span className="px-3 py-1 bg-red-50 border border-red-200 text-red-650 rounded-full text-xs font-black leading-none font-mono">
-                        {proj.valueSAR.toLocaleString()} SAR
-                      </span>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <div className={`flex items-center justify-between ${isRtl ? 'flex-row-reverse' : ''}`}>
-                        <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400 font-mono">
-                          {isRtl ? `رقم المشروع: ${proj.id}` : `PR-ID: ${proj.id}`}
-                        </span>
-                      </div>
-                      <h3 className={`text-base font-black text-slate-900 leading-snug ${isRtl ? 'text-right' : 'text-left'}`}>
-                        {name}
-                      </h3>
-                      <p className={`text-xs text-green-850 font-bold ${isRtl ? 'text-right' : 'text-left'}`}>
-                        {isRtl ? `الجهة المالكة: ${client}` : `Owner: ${client}`}
-                      </p>
-                    </div>
-
-                    <p className={`text-xs text-slate-600 leading-relaxed font-semibold pt-2 border-t border-slate-100 ${isRtl ? 'text-right' : 'text-left'}`}>
-                      {scope}
-                    </p>
-                  </div>
-
-                  {/* Summary Footer bar */}
-                  <div className="bg-slate-50 px-6 py-5 border-t border-slate-200 text-xs">
-                    <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-slate-650">
-                      <div className={`flex flex-col ${isRtl ? 'text-right' : 'text-left'}`}>
-                        <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">{t.projLabelDuration}</span>
-                        <span className="font-black text-slate-800 leading-normal mt-0.5">{duration}</span>
-                      </div>
-                      <div className={`flex flex-col ${isRtl ? 'text-right' : 'text-left'}`}>
-                        <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">{t.projLabelLocation}</span>
-                        <span className="font-black text-slate-800 mt-0.5 truncate">{location}</span>
-                      </div>
-                      <div className={`flex flex-col ${isRtl ? 'text-right' : 'text-left'}`}>
-                        <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">{t.projLabelDates}</span>
-                        <span className="font-black text-slate-800 mt-0.5" dir="ltr">{proj.startDate}</span>
-                      </div>
-                      <div className={`flex flex-col ${isRtl ? 'text-right' : 'text-left'}`}>
-                        <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">{isRtl ? 'درجة الإنجاز' : 'Progress'}</span>
-                        <div className="flex items-center gap-2 mt-1">
-                          <div className="flex-1 bg-slate-200 h-2 rounded-full overflow-hidden">
-                            <div className="bg-green-600 h-full rounded-full" style={{ width: `${proj.progress}%` }} />
-                          </div>
-                          <span className="font-extrabold text-slate-900 text-[10px] text-right font-mono">{proj.progress}%</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Fallback empty view */}
-          {filteredProjects.length === 0 && (
-            <div className="text-center py-12 bg-white border border-dashed border-slate-200 rounded-3xl">
-              <p className="text-sm text-slate-500">{isRtl ? 'لم يثبت وجود مشروع مطابق لبحثك. يرجى تعديل البحث.' : 'No projects match your search.'}</p>
-            </div>
-          )}
 
         </div>
       </section>
@@ -676,321 +606,131 @@ export default function App() {
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-4">
               {isRtl ? 'معدات وأسطول الشركة المتبنى ميكانيكياً' : 'Heavy Mechanical Asset Registry'}
             </h2>
-            <p className="text-slate-650 text-sm leading-relaxed font-semibold">
+            <p className="text-slate-655 text-sm leading-relaxed font-semibold">
               {t.fleetSubtitle}
             </p>
 
             <div className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-green-950 text-red-400 border border-green-900 rounded-2xl text-xs font-black shadow-sm">
               <span>{t.totalFleetCount}:</span>
-              <span className="font-extrabold text-white">400+ آليات نشطة بالكامل</span>
+              <span className="font-extrabold text-white">{isRtl ? '400+ آليات نشطة بالكامل تملكها الشركة 100%' : '400+ Active Fully-Owned Machineries'}</span>
             </div>
           </div>
 
-          {/* Filters & search */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8 bg-slate-50 p-4 rounded-3xl border border-slate-200">
-            {/* Equipment Category tabs */}
-            <div className={`flex flex-wrap gap-1 w-full md:w-auto ${isRtl ? 'flex-row-reverse justify-end' : 'justify-start'}`}>
-              {[
-                { id: 'all', label: t.fleetCategoryAll },
-                { id: 'heavy', label: t.fleetCategoryHeavy },
-                { id: 'transport', label: t.fleetCategoryTransport },
-                { id: 'specialized', label: t.fleetCategorySpecialized },
-                { id: 'power', label: t.fleetCategoryPower },
-                { id: 'support', label: t.fleetCategorySupport },
-              ].map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveFleetCategory(cat.id)}
-                  className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${
-                    activeFleetCategory === cat.id
-                      ? 'bg-green-900 text-white shadow-sm'
-                      : 'bg-white hover:bg-slate-150 text-slate-700 border border-slate-200'
-                  }`}
-                  id={`fleet-tab-${cat.id}`}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Search Input */}
-            <div className={`relative w-full md:w-80 flex items-center ${isRtl ? 'flex-row-reverse' : ''}`}>
-              <Search className="w-4 h-4 text-slate-400 absolute mx-3 pointer-events-none" />
-              <input
-                type="text"
-                value={fleetQuery}
-                onChange={(e) => setFleetQuery(e.target.value)}
-                placeholder={t.filterPlaceholder}
-                className={`w-full py-2.5 border border-slate-200 rounded-2xl bg-white text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-green-900/20 ${isRtl ? 'pl-3 pr-9 text-right' : 'pl-9 pr-3 text-left'}`}
-                id="fleet-search-input"
-              />
-            </div>
-          </div>
-
-          {/* Equipment Fleet Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="machinery-grid">
-            {filteredFleet.map((eq) => {
-              const Icon = getEquipmentIcon(eq.icon);
+          {/* Quick Category Summary Grid for Home Page (High level, no complex search/filter inputs) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            {[
+              { labelAr: 'معدات الحفر والتسوية', labelEn: 'Earthmoving & Grading', count: '150+ آلية', subAr: 'بلدوزرات، حفارات، غرايدرات', subEn: 'Bulldozers, Excavators', icon: Shovel },
+              { labelAr: 'الناقلات وسيارات الخدمة', labelEn: 'Heavy Hauling & Dumpers', count: '120+ وحدة', subAr: 'شاحنات نقل الركام والخرسانة', subEn: 'Heavy Dumpers, Mixers', icon: Truck },
+              { labelAr: 'معدات الإسفلت والرصف', labelEn: 'Asphalt & Paving Fleet', count: '65+ آلية', subAr: 'رصاصات، فرادات إسفلت حديثة', subEn: 'Rollers, Pavers', icon: Settings },
+              { labelAr: 'مولدات ومحطات الطاقة', labelEn: 'Generators & Power Units', count: '45+ وحدة', subAr: 'مولدات طاقة كهروميكانيكية', subEn: 'Caterpillar Generators', icon: Power },
+              { labelAr: 'آليات هيدروليكية وتخصصية', labelEn: 'Specialized Sub-systems', count: '20+ آليات', subAr: 'شاكوش هيدروليكي، حفارات عميقة', subEn: 'Hydraulic Hammers', icon: Hammer }
+            ].map((cat, index) => {
+              const Icon = cat.icon;
               return (
-                <div 
-                  key={eq.id} 
-                  className="bg-white rounded-[2rem] p-6 border border-slate-200 flex flex-col justify-between hover:border-slate-350 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
-                  id={`machinery-card-${eq.id}`}
-                >
+                <div key={index} className="bg-slate-50 border border-slate-200/80 rounded-[2rem] p-6 text-center hover:shadow-md transition-all flex flex-col justify-between items-center min-h-[220px]">
+                  <div className="p-4 bg-green-50 text-green-900 rounded-2xl border border-green-150 mb-4 shadow-sm">
+                    <Icon className="w-6 h-6" />
+                  </div>
                   <div>
-                    {/* Header: Icon & Count badge */}
-                    <div className={`flex items-start justify-between mb-5 ${isRtl ? 'flex-row-reverse' : ''}`}>
-                      <div className="p-3 bg-green-50 text-green-900 rounded-2xl border border-green-150 shadow-xs">
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <span className="text-xs font-black text-red-650 border border-red-150 px-3 py-1 bg-red-50/50 rounded-xl">
-                        {eq.count} {isRtl ? 'آلية' : 'units'}
-                      </span>
-                    </div>
-
-                    {/* Equipment metadata */}
-                    <div className={`${isRtl ? 'text-right' : 'text-left'}`}>
-                      <h4 className="text-sm font-black text-slate-900 leading-snug title-font">
-                        {isRtl ? eq.nameAr : eq.nameEn}
-                      </h4>
-                      <p className="text-[10px] text-green-800 mt-2 uppercase font-black tracking-widest bg-green-50/50 inline-block px-2.5 py-0.5 rounded-lg border border-green-100">
-                        {eq.category === 'heavy' && (isRtl ? 'معدات ثقيلة' : 'Heavy Equipment')}
-                        {eq.category === 'transport' && (isRtl ? 'معدات نقل وطاقة' : 'Transport & Power')}
-                        {eq.category === 'specialized' && (isRtl ? 'معدات تخصصية' : 'Specialized')}
-                        {eq.category === 'power' && (isRtl ? 'طاقة ومولدات' : 'Power Generators')}
-                        {eq.category === 'support' && (isRtl ? 'معدات مساندة' : 'Support Assets')}
-                      </p>
-                    </div>
+                    <h4 className="text-xs font-black text-slate-900 tracking-tight leading-tight mb-1">
+                      {isRtl ? cat.labelAr : cat.labelEn}
+                    </h4>
+                    <p className="text-[10px] text-slate-500 mb-3 font-semibold">
+                      {isRtl ? cat.subAr : cat.subEn}
+                    </p>
                   </div>
-
-                  <div className={`flex justify-between items-center mt-5 pt-3.5 border-t border-slate-100 text-[10px] ${isRtl ? 'flex-row-reverse' : ''}`}>
-                    <span className="text-green-800 font-extrabold flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block animate-pulse" />
-                      {t.activeStatus}
-                    </span>
-                    <span className="text-slate-400 font-bold">
-                      {isRtl ? 'جاهزية تامة' : 'Fully Operational'}
-                    </span>
-                  </div>
+                  <span className="text-[11px] font-black text-red-650 bg-red-50 border border-red-150 px-3 py-1 rounded-xl">
+                    {cat.count}
+                  </span>
                 </div>
               );
             })}
           </div>
 
-          {/* Fleet empty query match fallback */}
-          {filteredFleet.length === 0 && (
-            <div className="text-center py-12 bg-white rounded-3xl border border-slate-200">
-              <p className="text-sm text-slate-500">{isRtl ? 'لا يوجد آلية مطابقة لبحثك في الأسطول.' : 'No machinery matches your queries.'}</p>
-            </div>
-          )}
-
-        </div>
-      </section>
-
-      {/* Key Corporate Clients Segment */}
-      <section id="clients" className="py-20 bg-white scroll-mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-black tracking-widest text-green-950 uppercase bg-green-50 border border-slate-250 px-3.5 py-1.5 rounded-full inline-block mb-3">
-              {t.clients}
-            </span>
-            <h3 className="text-3xl font-black text-slate-950">{lang === 'ar' ? 'فخورون بشراكة كبار الكيانات الوطنية' : 'Proudly Partnering with Major National Entities'}</h3>
-            <p className="text-sm text-slate-500 mt-2 font-semibold">{lang === 'ar' ? 'نفذنا أعمالاً هندسية ومقاولات لجهات حكومية سيادية وشركات دولية عملاقة' : 'We have completed pre-qualified packages with premier ministerial stakeholders and multinational firms.'}</p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-4 items-stretch">
-            {[
-              { name: 'أمانة الرياض', sub: 'Riyadh Municipality' },
-              { name: 'غرفة الرياض', sub: 'Riyadh Chamber' },
-              { name: 'موسم الدرعية', sub: 'Diriyah Season' },
-              { name: 'نسما وشركاهم', sub: 'Nesma & Partners' },
-              { name: 'مجموعة بن لادن', sub: 'Saudi Binladin' },
-              { name: 'البواني للمقاولات', sub: 'Al Bawani' },
-              { name: 'أجيليتي العالمية', sub: 'Agility Logistics' },
-              { name: 'ماركو العقارية', sub: 'MARCO' }
-            ].map((client, idx) => (
-              <div key={idx} className="bg-slate-50 p-5 border border-slate-200 rounded-3xl text-center flex flex-col items-center justify-center min-h-[100px] hover:bg-white hover:border-slate-350 hover:shadow-xs transition-all duration-200">
-                <span className="text-xs font-black text-slate-900 tracking-tight leading-snug">{client.name}</span>
-                <span className="text-[9px] text-green-900 mt-1.5 uppercase font-extrabold block tracking-wider">{client.sub}</span>
-              </div>
-            ))}
+          <div className="text-center mt-12">
+            <button
+              onClick={() => {
+                handlePageChange('fleet');
+              }}
+              className="px-8 py-4 bg-green-950 hover:bg-green-900 text-white hover:scale-[1.02] active:scale-[0.98] transition-all font-bold rounded-2xl text-xs shadow-md cursor-pointer inline-flex items-center gap-2"
+            >
+              <span>{isRtl ? 'فتح دليل الأسطول وتصفية الفئات بالتفصيل ←' : 'Open Full Machinery Catalog & Category Filters ←'}</span>
+            </button>
           </div>
 
         </div>
       </section>
 
-      {/* Organizational Structure tree section */}
-      <OrgChartStructure lang={lang} />
+      {/* Elegant Contact CTA Section for Home Page (Directing to the dedicated Contact Page) */}
+      <section id="contact" className="py-24 bg-gradient-to-br from-green-950 via-slate-950 to-slate-950 text-white scroll-mt-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-900/30 via-transparent to-transparent opacity-40 select-none pointer-events-none" />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <span className="text-xs font-black tracking-widest text-red-400 uppercase bg-green-900/40 border border-green-800 px-3.5 py-1.5 rounded-full inline-block mb-4">
+            {isRtl ? 'طلب عروض الأسعار والتسعير' : 'Corporate Inquiries & Quotations'}
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4">
+            {isRtl ? 'جاهز لتنفيذ مشروعك القادم بأعلى معايير الجودة؟' : 'Ready to execute your project with unmatched quality standards?'}
+          </h2>
+          <p className="text-sm text-slate-300 max-w-2xl mx-auto mb-8 font-semibold leading-relaxed">
+            {isRtl 
+              ? 'تواصل مع فريقنا الهندسي اليوم لطلب عرض سعر تفصيلي متكامل ومناقشة الجداول الزمنية والآليات المخصصة لمشروعك.'
+              : 'Partner with Saudi Arabia\'s most trusted infrastructure specialists. Contact us today to request an engineering proposal.'}
+          </p>
 
-      {/* Contact & Quotation Section */}
-      <section id="contact" className="py-20 scroll-mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <button
+              onClick={() => {
+                handlePageChange('contact');
+              }}
+              className="px-8 py-4 bg-red-650 hover:bg-red-750 text-white hover:scale-[1.02] active:scale-[0.98] transition-all font-extrabold rounded-2xl text-xs shadow-lg cursor-pointer inline-flex items-center gap-2"
+            >
+              <span>{isRtl ? 'الانتقال لنموذج طلب عرض سعر هندسي ←' : 'Go to Engineering Quote Form ←'}</span>
+            </button>
             
-            {/* Left direct contacts card block */}
-            <div className="lg:col-span-4 flex flex-col gap-6">
-              
-              <div className={`bg-green-950 text-white rounded-[2rem] p-8 border border-green-900 shadow-sm ${isRtl ? 'text-right' : 'text-left'}`}>
-                <h3 className="text-xl font-black text-red-400 tracking-tight mb-2">{isRtl ? 'تواصل معنا مباشرة' : 'Direct Dispatch HQ'}</h3>
-                <p className="text-xs text-green-200 leading-relaxed font-semibold mb-6">
-                  {lang === 'ar' ? 'نسعد بخدمة المطورين العقاريين، مكاتب الاستفسارات والمناقصات بمدينة الرياض وكافة المدن.' : 'Interested in equipment rental lease or structural earthworks? Contact us directly.'}
-                </p>
+            <a
+              href="tel:+966114329595"
+              className="px-8 py-4 bg-green-900 hover:bg-green-850 text-white hover:scale-[1.02] active:scale-[0.98] transition-all font-bold rounded-2xl text-xs shadow-md border border-green-800 inline-flex items-center gap-2"
+            >
+              <span>{isRtl ? 'اتصل بمركز الخدمات الرئيسي' : 'Call Main Office Dispatch'}</span>
+            </a>
+          </div>
 
-                <div className="space-y-5 text-xs font-semibold">
-                  <div className={`flex gap-3 items-start ${isRtl ? 'flex-row-reverse' : ''}`}>
-                    <MapPin className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <span className="text-green-300 uppercase tracking-widest text-[9px] font-black block">{t.addressLabel}</span>
-                      <p className="text-white mt-1 leading-relaxed">{t.addrDetails}</p>
-                      <div className={`mt-3 flex flex-wrap gap-2 ${isRtl ? 'flex-row-reverse justify-start' : 'justify-start'}`}>
-                        <a 
-                          href="https://maps.app.goo.gl/Cs9e6oXE7h7tztmq8" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-900 hover:bg-green-855 text-white rounded-xl text-[10px] sm:text-[11px] font-black transition-all shadow-md border border-green-800"
-                        >
-                          <MapPin className="w-3 h-3 text-red-400" />
-                          <span>{isRtl ? 'فتح الخرائط والاتجاهات' : 'Open Directions'}</span>
-                        </a>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const mapUrl = 'https://maps.app.goo.gl/Cs9e6oXE7h7tztmq8';
-                            const fallbackCopyToClipboard = () => {
-                              if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
-                                navigator.clipboard.writeText(mapUrl)
-                                  .then(() => {
-                                    setLocationCopied(true);
-                                    setTimeout(() => setLocationCopied(false), 2500);
-                                  })
-                                  .catch(() => {
-                                    // Silent catch to prevent unhandled rejection
-                                  });
-                              }
-                            };
-
-                            try {
-                              if (navigator.share) {
-                                navigator.share({
-                                  title: isRtl ? 'موقع شركة دار السالمية للمقاولات' : 'Dar Al-Salmiah Contracting Location',
-                                  text: t.addrDetails,
-                                  url: mapUrl
-                                }).then(() => {
-                                  setLocationCopied(true);
-                                  setTimeout(() => setLocationCopied(false), 2500);
-                                }).catch(() => {
-                                  // Fallback to clipboard if share was blocked/cancelled
-                                  fallbackCopyToClipboard();
-                                });
-                              } else {
-                                fallbackCopyToClipboard();
-                              }
-                            } catch (e) {
-                              fallbackCopyToClipboard();
-                            }
-                          }}
-                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] sm:text-[11px] font-black transition-all border cursor-pointer ${
-                            locationCopied 
-                              ? 'bg-green-800 text-white border-green-700' 
-                              : 'bg-green-950 hover:bg-green-900 text-green-300 border-green-900'
-                          }`}
-                        >
-                          <span>
-                            {locationCopied 
-                              ? (isRtl ? 'تم نسخ الرابط!' : 'Link Copied!') 
-                              : (isRtl ? 'مشاركة الموقع' : 'Share Location')}
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className={`flex gap-3 items-start ${isRtl ? 'flex-row-reverse' : ''}`}>
-                    <Phone className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-green-300 uppercase tracking-widest text-[9px] font-black block">{t.phoneLabel}</span>
-                      <a href="tel:+966114329595" className="hover:underline hover:text-red-400 block text-white mt-1 font-mono" dir="ltr">+966 11 4329595</a>
-                      <a href="tel:+966114337964" className="hover:underline hover:text-red-400 block text-white font-mono" dir="ltr">+966 11 4337964</a>
-                    </div>
-                  </div>
-
-                  <div className={`flex gap-3 items-start ${isRtl ? 'flex-row-reverse' : ''}`}>
-                    <Phone className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <span className="text-green-300 uppercase tracking-widest text-[9px] font-black block">{t.mobileLabel}</span>
-                      <div className="mt-2 space-y-2.5">
-                        <div className={`flex items-center gap-2.5 ${isRtl ? 'flex-row-reverse' : ''}`}>
-                          <p className="text-red-400 font-extrabold text-sm font-mono" dir="ltr">0500143271</p>
-                          <div className="flex gap-1.5">
-                            <a href="tel:0500143271" className="bg-green-900 text-white p-1 rounded-md hover:bg-green-800 transition-colors" title={isRtl ? 'اتصال مباشر' : 'Call'}>
-                              <Phone className="w-3.5 h-3.5" />
-                            </a>
-                            <a href="https://wa.me/966500143271" target="_blank" rel="noopener noreferrer" className="bg-green-800 text-white p-1 rounded-md hover:bg-green-750 transition-colors" title={isRtl ? 'واتساب مباشر' : 'WhatsApp'}>
-                              <MessageCircle className="w-3.5 h-3.5" />
-                            </a>
-                          </div>
-                        </div>
-                        <div className={`flex items-center gap-2.5 ${isRtl ? 'flex-row-reverse' : ''}`}>
-                          <p className="text-red-400 font-extrabold text-sm font-mono" dir="ltr">0504454250</p>
-                          <div className="flex gap-1.5">
-                            <a href="tel:0504454250" className="bg-green-900 text-white p-1 rounded-md hover:bg-green-800 transition-colors" title={isRtl ? 'اتصال مباشر' : 'Call'}>
-                              <Phone className="w-3.5 h-3.5" />
-                            </a>
-                            <a href="https://wa.me/966504454250" target="_blank" rel="noopener noreferrer" className="bg-green-800 text-white p-1 rounded-md hover:bg-green-750 transition-colors" title={isRtl ? 'واتساب مباشر' : 'WhatsApp'}>
-                              <MessageCircle className="w-3.5 h-3.5" />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className={`flex gap-3 items-start ${isRtl ? 'flex-row-reverse' : ''}`}>
-                    <Mail className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-green-300 uppercase tracking-widest text-[9px] font-black block">{t.emailLabel}</span>
-                      <p className="text-white mt-1 break-all font-mono">dar_elsalmyah@hotmail.com</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Working hours card */}
-              <div className={`bg-slate-50 rounded-[2rem] p-8 border border-slate-200 ${isRtl ? 'text-right' : 'text-left'}`}>
-                <span className="text-[10px] text-green-950 uppercase font-black tracking-wider block mb-1">{t.officeHours}</span>
-                <h4 className="text-base font-black text-slate-900">{t.officeHoursVal}</h4>
-                <p className="text-[10.5px] text-slate-600 font-semibold mt-3 leading-relaxed">
-                  {isRtl ? 'ملاحظة: تلتزم آلياتنا وسائقينا الميدانيين بنظام المناوبات 24 ساعة لتلبية مواعيد المشاريع الحرجة والإنقاذ الطارئ.' : 'Note: Field operations, machinery drivers, and supervisors run on 24/7 rotating shifts based on specific project schedules.'}
-                </p>
-              </div>
-
+          <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-6 pt-10 border-t border-slate-900 text-xs font-semibold text-slate-400">
+            <div>
+              <span className="text-[10px] text-green-400 uppercase font-black tracking-wider block mb-1">{isRtl ? 'البريد الرسمي للتواصل' : 'Corporate Email'}</span>
+              <span className="text-white font-mono">info@dasco-sa.com</span>
             </div>
-
-            {/* Right Quote form block */}
-            <div className="lg:col-span-8">
-              <QuoteForm lang={lang} />
+            <div>
+              <span className="text-[10px] text-green-400 uppercase font-black tracking-wider block mb-1">{isRtl ? 'الرقم الموحد للشركة' : 'Main HQ Line'}</span>
+              <span className="text-white font-mono" dir="ltr">+966 11 4329595</span>
             </div>
-
+            <div className="col-span-2 sm:col-span-1">
+              <span className="text-[10px] text-green-400 uppercase font-black tracking-wider block mb-1">{isRtl ? 'موقع الإدارة والمستودع الرئيسي' : 'Corporate Logistics HQ'}</span>
+              <span className="text-white">{isRtl ? 'حي الشفا، الرياض، المملكة العربية السعودية' : 'Al-Shifa District, Riyadh, KSA'}</span>
+            </div>
           </div>
 
         </div>
       </section>
+
+        </>
+      )}
 
       {/* Footer component */}
-      <div className="pb-16 md:pb-0">
+      <div className="pb-16 md:pb-0 landscape:pb-0">
         <Footer 
           lang={lang} 
+          currentPage={currentPage}
+          setCurrentPage={handlePageChange}
           scrollToSection={scrollToSection} 
         />
       </div>
 
       {/* Floating Bottom Quick Action Bar for Mobile Experience */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-slate-950/95 backdrop-blur-md border-t border-slate-900 px-3 py-2 shadow-2xl flex items-center justify-around text-white">
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden landscape:hidden bg-slate-950/95 backdrop-blur-md border-t border-slate-900 px-3 py-2 shadow-2xl flex items-center justify-around text-white">
         <a 
           href="tel:0500143271" 
-          className="flex items-center gap-1 hover:text-red-450 transition-colors bg-red-950/40 px-2 py-1 rounded-lg border border-red-900/30 shrink-0"
+          className="flex items-center gap-1 hover:text-red-455 transition-colors bg-red-950/40 px-2 py-1 rounded-lg border border-red-900/30 shrink-0"
         >
           <Phone className="w-3.5 h-3.5 text-red-400 shrink-0" />
           <span className="text-[10px] font-black">{isRtl ? 'اتصل' : 'Call'}</span>
@@ -1010,20 +750,17 @@ export default function App() {
           href="https://maps.app.goo.gl/Cs9e6oXE7h7tztmq8" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className="flex items-center gap-1 hover:text-red-400 transition-colors bg-red-950/40 px-2 py-1 rounded-lg border border-red-900/30 shrink-0"
+          className="flex items-center gap-1 hover:text-red-455 transition-colors bg-red-950/40 px-2 py-1 rounded-lg border border-red-900/30 shrink-0"
         >
-          <MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" />
+          <MapPin className="w-3.5 h-3.5 text-red-550 shrink-0" />
           <span className="text-[10px] font-black">{isRtl ? 'موقعنا' : 'Location'}</span>
         </a>
 
         <button 
           onClick={() => {
-            const el = document.getElementById('quote-form-container');
-            if (el) {
-              el.scrollIntoView({ behavior: 'smooth' });
-            }
+            handlePageChange('contact');
           }}
-          className="flex items-center gap-1 hover:text-red-450 transition-colors cursor-pointer bg-green-900/30 px-2 py-1 rounded-lg border border-green-800/30 shrink-0"
+          className="flex items-center gap-1 hover:text-red-455 transition-colors cursor-pointer bg-green-900/30 px-2 py-1 rounded-lg border border-green-800/30 shrink-0"
         >
           <Send className="w-3.5 h-3.5 text-red-400 shrink-0" />
           <span className="text-[10px] font-black">{isRtl ? 'عرض سعر' : 'Quote'}</span>
