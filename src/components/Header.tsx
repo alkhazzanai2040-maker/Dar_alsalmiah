@@ -51,9 +51,9 @@ export default function Header({ lang, setLang, currentPage, setCurrentPage, act
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <div className="flex items-center gap-4 flex-row">
             <div className="flex items-center gap-3">
-              <a href="tel:0500143271" className="flex items-center gap-1.5 hover:text-red-500 transition-colors">
+              <a href="tel:00966500143271" className="flex items-center gap-1.5 hover:text-red-500 transition-colors">
                 <Phone className="w-3.5 h-3.5 text-red-550" />
-                <span dir="ltr">0500143271</span>
+                <span dir="ltr">00966500143271</span>
               </a>
               <span className="text-slate-700">|</span>
               <a href="https://wa.me/966500143271" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-green-400 text-green-400 transition-colors bg-green-950/40 px-2 py-0.5 rounded-md border border-green-900/40">
@@ -82,7 +82,7 @@ export default function Header({ lang, setLang, currentPage, setCurrentPage, act
               title={isRtl ? 'عرض موقعنا في خرائط جوجل' : 'View our HQ location'}
             >
               <MapPin className="w-3.5 h-3.5 text-red-550 shrink-0" />
-              <span className="text-xs sm:text-sm">{isRtl ? 'الرياض، حي العريجاء الغربي، شارع أبي حنيفة' : 'Riyadh, Al-Urayja Al-Gharbi, Abi Hanifah St'}</span>
+              <span className="text-xs sm:text-sm">{isRtl ? 'الرياض - شارع الإمام أبي حنيفة' : 'Riyadh - Imam Abi Hanifah St'}</span>
             </a>
           </div>
         </div>
@@ -246,7 +246,7 @@ export default function Header({ lang, setLang, currentPage, setCurrentPage, act
             </button>
             <div className="mt-4 pt-4 border-t border-green-950/40 flex flex-col gap-2">
               <div className="flex gap-2">
-                <a href="tel:0500143271" className="flex-1 flex items-center justify-center gap-2 text-xs text-slate-300 py-2 px-3 rounded-xl bg-green-950 hover:text-white border border-green-900/40">
+                <a href="tel:00966500143271" className="flex-1 flex items-center justify-center gap-2 text-xs text-slate-300 py-2 px-3 rounded-xl bg-green-950 hover:text-white border border-green-900/40">
                   <Phone className="w-3.5 h-3.5 text-red-550" />
                   <span dir="ltr" className="font-mono">اتصال</span>
                 </a>

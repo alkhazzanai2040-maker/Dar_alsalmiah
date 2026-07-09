@@ -363,11 +363,7 @@ export default function App() {
                 <div className={`flex flex-col gap-2.5 text-xs text-slate-700 ${isRtl ? 'text-right' : ''}`}>
                   <div className={`flex items-center gap-2 ${isRtl ? 'flex-row-reverse' : ''}`}>
                     <Phone className="w-4 h-4 text-green-700 shrink-0" />
-                    <span className="font-medium">{isRtl ? 'هاتف رئيسي:' : 'Direct Phone 1:'} <strong className="font-mono">+966 11 4329595</strong></span>
-                  </div>
-                  <div className={`flex items-center gap-2 ${isRtl ? 'flex-row-reverse' : ''}`}>
-                    <Phone className="w-4 h-4 text-green-700 shrink-0" />
-                    <span className="font-medium">{isRtl ? 'هاتف فرعي:' : 'Direct Phone 2:'} <strong className="font-mono">+966 11 4337964</strong></span>
+                    <span className="font-medium">{isRtl ? 'الهاتف الأرضي:' : 'Direct Phone:'} <strong className="font-mono">+966 11 4337964</strong></span>
                   </div>
                   <div className={`flex items-center gap-2 ${isRtl ? 'flex-row-reverse' : ''}`}>
                     <Mail className="w-4 h-4 text-green-700 shrink-0" />
@@ -688,7 +684,7 @@ export default function App() {
             </button>
             
             <a
-              href="tel:+966114329595"
+              href="tel:+966114337964"
               className="px-8 py-4 bg-green-900 hover:bg-green-850 text-white hover:scale-[1.02] active:scale-[0.98] transition-all font-bold rounded-2xl text-xs shadow-md border border-green-800 inline-flex items-center gap-2"
             >
               <span>{isRtl ? 'اتصل بمركز الخدمات الرئيسي' : 'Call Main Office Dispatch'}</span>
@@ -702,7 +698,7 @@ export default function App() {
             </div>
             <div>
               <span className="text-[10px] text-green-400 uppercase font-black tracking-wider block mb-1">{isRtl ? 'الرقم الموحد للشركة' : 'Main HQ Line'}</span>
-              <span className="text-white font-mono" dir="ltr">+966 11 4329595</span>
+              <span className="text-white font-mono" dir="ltr">+966 11 4337964</span>
             </div>
             <div className="col-span-2 sm:col-span-1">
               <span className="text-[10px] text-green-400 uppercase font-black tracking-wider block mb-1">{isRtl ? 'موقع الإدارة والمستودع الرئيسي' : 'Corporate Logistics HQ'}</span>
@@ -729,7 +725,7 @@ export default function App() {
       {/* Floating Bottom Quick Action Bar for Mobile Experience */}
       <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden landscape:hidden bg-slate-950/95 backdrop-blur-md border-t border-slate-900 px-3 py-2 shadow-2xl flex items-center justify-around text-white">
         <a 
-          href="tel:0500143271" 
+          href="tel:00966500143271" 
           className="flex items-center gap-1 hover:text-red-455 transition-colors bg-red-950/40 px-2 py-1 rounded-lg border border-red-900/30 shrink-0"
         >
           <Phone className="w-3.5 h-3.5 text-red-400 shrink-0" />

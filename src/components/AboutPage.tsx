@@ -118,11 +118,7 @@ export default function AboutPage({ lang }: AboutPageProps) {
               <div className={`flex flex-col gap-2.5 text-xs text-slate-700 ${isRtl ? 'text-right' : ''}`}>
                 <div className={`flex items-center gap-2 ${isRtl ? 'flex-row-reverse' : ''}`}>
                   <Phone className="w-4 h-4 text-green-700 shrink-0" />
-                  <span className="font-medium">{isRtl ? 'هاتف رئيسي:' : 'Direct Phone 1:'} <strong className="font-mono">+966 11 4329595</strong></span>
-                </div>
-                <div className={`flex items-center gap-2 ${isRtl ? 'flex-row-reverse' : ''}`}>
-                  <Phone className="w-4 h-4 text-green-700 shrink-0" />
-                  <span className="font-medium">{isRtl ? 'هاتف فرعي:' : 'Direct Phone 2:'} <strong className="font-mono">+966 11 4337964</strong></span>
+                  <span className="font-medium">{isRtl ? 'الهاتف الأرضي:' : 'Direct Phone:'} <strong className="font-mono">+966 11 4337964</strong></span>
                 </div>
                 <div className={`flex items-center gap-2 ${isRtl ? 'flex-row-reverse' : ''}`}>
                   <Mail className="w-4 h-4 text-green-700 shrink-0" />

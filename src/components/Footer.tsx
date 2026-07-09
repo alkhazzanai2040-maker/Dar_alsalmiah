@@ -177,16 +177,15 @@ export default function Footer({ lang, currentPage, setCurrentPage, scrollToSect
               <li className={`flex gap-2.5 ${isRtl ? 'text-right' : 'text-left'}`}>
                 <Phone className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
                 <div dir="ltr">
-                  <span>+966 11 4329595</span><br />
                   <span>+966 11 4337964</span>
                 </div>
               </li>
               <li className={`flex gap-2.5 ${isRtl ? 'text-right' : 'text-left'}`}>
-                <Phone className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                <Phone className="w-5 h-5 text-red-550 shrink-0 mt-0.5" />
                 <div dir="ltr" className="font-semibold flex flex-col gap-1.5">
                   <div className="flex items-center gap-2">
-                    <span>0500143271</span>
-                    <a href="tel:0500143271" className="bg-red-950 text-red-400 p-1 rounded-md hover:bg-red-900 transition-colors" title={isRtl ? 'اتصال مباشر' : 'Call Directly'}>
+                    <span>00966500143271</span>
+                    <a href="tel:00966500143271" className="bg-red-950 text-red-400 p-1 rounded-md hover:bg-red-900 transition-colors" title={isRtl ? 'اتصال مباشر' : 'Call Directly'}>
                       <Phone className="w-3 h-3" />
                     </a>
                     <a href="https://wa.me/966500143271" target="_blank" rel="noopener noreferrer" className="bg-green-950 text-green-400 p-1 rounded-md hover:bg-green-900 transition-colors" title={isRtl ? 'واتساب' : 'WhatsApp'}>
@@ -194,11 +193,11 @@ export default function Footer({ lang, currentPage, setCurrentPage, scrollToSect
                     </a>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span>0504454250</span>
-                    <a href="tel:0504454250" className="bg-red-950 text-red-400 p-1 rounded-md hover:bg-red-900 transition-colors" title={isRtl ? 'اتصال مباشر' : 'Call Directly'}>
+                    <span>00966554454250</span>
+                    <a href="tel:00966554454250" className="bg-red-950 text-red-400 p-1 rounded-md hover:bg-red-900 transition-colors" title={isRtl ? 'اتصال مباشر' : 'Call Directly'}>
                       <Phone className="w-3 h-3" />
                     </a>
-                    <a href="https://wa.me/966504454250" target="_blank" rel="noopener noreferrer" className="bg-green-950 text-green-400 p-1 rounded-md hover:bg-green-900 transition-colors" title={isRtl ? 'واتساب' : 'WhatsApp'}>
+                    <a href="https://wa.me/966554454250" target="_blank" rel="noopener noreferrer" className="bg-green-950 text-green-400 p-1 rounded-md hover:bg-green-900 transition-colors" title={isRtl ? 'واتساب' : 'WhatsApp'}>
                       <MessageCircle className="w-3 h-3" />
                     </a>
                   </div>

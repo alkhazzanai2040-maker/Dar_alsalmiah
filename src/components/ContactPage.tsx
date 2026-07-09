@@ -125,8 +125,7 @@ export default function ContactPage({ lang }: ContactPageProps) {
                   <Phone className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-green-300 uppercase tracking-widest text-[9px] font-black block">{t.phoneLabel}</span>
-                    <a href="tel:+966114329595" className="hover:underline hover:text-red-400 block text-white mt-1 font-mono" dir="ltr">+966 11 4329595</a>
-                    <a href="tel:+966114337964" className="hover:underline hover:text-red-400 block text-white font-mono" dir="ltr">+966 11 4337964</a>
+                    <a href="tel:+966114337964" className="hover:underline hover:text-red-400 block text-white mt-1 font-mono" dir="ltr">+966 11 4337964</a>
                   </div>
                 </div>
 
@@ -136,9 +135,9 @@ export default function ContactPage({ lang }: ContactPageProps) {
                     <span className="text-green-300 uppercase tracking-widest text-[9px] font-black block">{t.mobileLabel}</span>
                     <div className="mt-2 space-y-2.5">
                       <div className={`flex items-center gap-2.5 ${isRtl ? 'flex-row-reverse' : ''}`}>
-                        <p className="text-red-400 font-extrabold text-sm font-mono" dir="ltr">0500143271</p>
+                        <p className="text-red-400 font-extrabold text-sm font-mono" dir="ltr">00966500143271</p>
                         <div className="flex gap-1.5">
-                          <a href="tel:0500143271" className="bg-green-900 text-white p-1 rounded-md hover:bg-green-800 transition-colors">
+                          <a href="tel:00966500143271" className="bg-green-900 text-white p-1 rounded-md hover:bg-green-800 transition-colors">
                             <Phone className="w-3.5 h-3.5" />
                           </a>
                           <a href="https://wa.me/966500143271" target="_blank" rel="noopener noreferrer" className="bg-green-800 text-white p-1 rounded-md hover:bg-green-750 transition-colors">
@@ -147,12 +146,12 @@ export default function ContactPage({ lang }: ContactPageProps) {
                         </div>
                       </div>
                       <div className={`flex items-center gap-2.5 ${isRtl ? 'flex-row-reverse' : ''}`}>
-                        <p className="text-red-400 font-extrabold text-sm font-mono" dir="ltr">0504454250</p>
+                        <p className="text-red-400 font-extrabold text-sm font-mono" dir="ltr">00966554454250</p>
                         <div className="flex gap-1.5">
-                          <a href="tel:0504454250" className="bg-green-900 text-white p-1 rounded-md hover:bg-green-800 transition-colors">
+                          <a href="tel:00966554454250" className="bg-green-900 text-white p-1 rounded-md hover:bg-green-800 transition-colors">
                             <Phone className="w-3.5 h-3.5" />
                           </a>
-                          <a href="https://wa.me/966504454250" target="_blank" rel="noopener noreferrer" className="bg-green-800 text-white p-1 rounded-md hover:bg-green-750 transition-colors">
+                          <a href="https://wa.me/966554454250" target="_blank" rel="noopener noreferrer" className="bg-green-800 text-white p-1 rounded-md hover:bg-green-750 transition-colors">
                             <MessageCircle className="w-3.5 h-3.5" />
                           </a>
                         </div>
